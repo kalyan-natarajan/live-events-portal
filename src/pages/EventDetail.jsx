@@ -8,6 +8,7 @@ import { useApp } from '../context/AppContext';
 import { events } from '../data/mockData';
 import { formatDate, formatTime, formatCurrency, daysUntil } from '../utils/helpers';
 import SeatMap from '../components/SeatMap';
+import MSGSeatMap from '../components/MSGSeatMap';
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -127,6 +128,9 @@ export default function EventDetail() {
             {event.category}
           </span>
           <h1 className="text-2xl md:text-4xl font-extrabold text-white">{event.title}</h1>
+            {event.subtitle && (
+              <p className="text-sm text-gray-300 mt-1">{event.subtitle}</p>
+            )}
         </div>
       </div>
 
@@ -190,7 +194,15 @@ export default function EventDetail() {
           </div>
 
           {/* Seat Map */}
-          <SeatMap sections={event.sections} onSelectSection={setSelectedSection} />
+          {event.venueLayout?.startsWith('msg') ? (
+            <MSGSeatMap
+              sections={event.sections}
+              onSelectSection={setSelectedSection}
+              venueLayout={event.venueLayout}
+            />
+          ) : (
+            <SeatMap sections={event.sections} onSelectSection={setSelectedSection} />
+          )}
         </div>
 
         {/* Right: purchase card */}
